@@ -1,11 +1,11 @@
 import { Markup } from 'telegraf'
 
-import { COMMANDS_OF_START } from '../constants/commands'
+import { COMMANDS_CHOOSE_ACTION } from '../constants/commands'
 import { REPLY_AT_START } from '../constants/replies'
 
 export default function handleStart(ctx, next) {
   const inlineKeyboard = Markup.keyboard([
-    COMMANDS_OF_START
+    COMMANDS_CHOOSE_ACTION
   ])
   .oneTime()
   .resize()

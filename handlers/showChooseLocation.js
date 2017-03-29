@@ -1,10 +1,11 @@
 import { Markup } from 'telegraf'
-import { COMMANDS_OF_LOCATION } from '../constants/commands'
+
+import { COMMANDS_CHOOSE_LOCATION } from '../constants/commands'
 import { REPLY_ON_CHOOSE_LOCATION } from '../constants/replies'
 
-export default function handleChooseCategory(ctx, next) {
+export default function showChooseLocation(ctx, next) {
   const inlineKeyboard = Markup.keyboard([
-    ...COMMANDS_OF_LOCATION
+    ...COMMANDS_CHOOSE_LOCATION
   ])
   .oneTime()
   .resize()

@@ -11,13 +11,14 @@ import Telegraf, { Markup } from 'telegraf'
 import {
   COMMAND_START,
   COMMAND_CREATE_JOB,
-  COMMANDS_OF_CATEGORY,
-  COMMANDS_OF_LOCATION
+  COMMANDS_CHOOSE_CATEGORY,
+  COMMANDS_CHOOSE_LOCATION
 } from './constants/commands'
 
-import handleStart from './handlers/start'
-import handleCreateJob from './handlers/createJob'
-import handleChooseCategory from './handlers/chooseCategory'
+import showActions from './handlers/start'
+import showChooseCategory from './handlers/showChooseCategory'
+import showChooseLocation from './handlers/showChooseLocation'
+import showChooseEmployment from './handlers/showChooseEmployment'
 
 if (!process.env.BOT_TOKEN) {
   throw Error(`[telegram-jobs-bot] BOT_TOKEN is undefined`)
@@ -27,8 +28,9 @@ if (!process.env.BOT_TOKEN) {
 
 const app = new Telegraf(process.env.BOT_TOKEN)
 
-app.command(COMMAND_START, handleStart)
-app.hears(COMMAND_CREATE_JOB, handleCreateJob)
-app.hears(COMMANDS_OF_CATEGORY, handleChooseCategory)
+app.command(COMMAND_START, showActions)
+app.hears(COMMAND_CREATE_JOB, showChooseCategory)
+app.hears(COMMANDS_CHOOSE_CATEGORY, showChooseLocation)
+app.hears(COMMANDS_CHOOSE_LOCATION, showChooseEmployment)
 
 app.startPolling()
