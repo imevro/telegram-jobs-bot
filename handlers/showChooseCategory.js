@@ -5,7 +5,7 @@ import { REPLY_ON_CREATE_JOB } from '../constants/replies'
 
 export default function showChooseCategory(ctx, next) {
   const inlineKeyboard = Markup.keyboard([
-    COMMANDS_CHOOSE_CATEGORY
+    COMMANDS_CHOOSE_CATEGORY,
   ])
   .oneTime()
   .resize()

@@ -5,7 +5,7 @@ import { REPLY_AT_START } from '../constants/replies'
 
 export default function handleStart(ctx, next) {
   const inlineKeyboard = Markup.keyboard([
-    COMMANDS_CHOOSE_ACTION
+    COMMANDS_CHOOSE_ACTION,
   ])
   .oneTime()
   .resize()

@@ -4,23 +4,23 @@ export const COMMAND_GET_OWN_JOBS = `❤️ список моих ваканси
 
 export const COMMANDS_CHOOSE_ACTION = [
   COMMAND_CREATE_JOB,
-  COMMAND_GET_OWN_JOBS
+  COMMAND_GET_OWN_JOBS,
 ]
 
 export const COMMANDS_CHOOSE_CATEGORY = [
   `JS-фронтэнд`,
-  `JS-бэкэнд`
+  `JS-бэкэнд`,
 ]
 
 export const COMMANDS_CHOOSE_LOCATION = [
   [
     `Москва`,
     `Санкт-Петербург`,
-    `Россия`
+    `Россия`,
   ],
   [
     `Европа`,
     `США`,
-    `Азия`
-  ]
+    `Азия`,
+  ],
 ]
