@@ -23,7 +23,7 @@ function createKeyboard(...buttons) { // eslint-disable-line
   .extra()
 }
 
-const statesHandlers = [
+const routes = [
   ctx => (
     ctx.reply(
       `Выберите действие`,
@@ -124,7 +124,7 @@ function stateMachineMiddleware(ctx, next) {
   if (chatType === `private`) {
     // const currentState = db.getStep(userId)
     const currentState = db[userId] || 0
-    const handler = statesHandlers[currentState]
+    const handler = routes[currentState]
 
     db[userId] = currentState
 
