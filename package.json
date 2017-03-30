@@ -14,7 +14,7 @@
     "winston": "^2.3.1"
   },
   "scripts": {
-    "start": "nodemon --exec $(npm bin)/babel-node ./index.js"
+    "start": "nodemon --exec $(npm bin)/babel-node ./src/index.js"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.0",

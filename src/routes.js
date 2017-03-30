@@ -1,29 +1,7 @@
-// flow:
-// choose category (frontend, backend, mobile, etc)
-// choose location
-// choose office or remote
-// choose $$$, min, max or "restricted by NDA"
-// paste description
-// check
-// if ok, forward to channel, from channel forward to chat and then paste links
+import { Markup } from 'telegraf'
+import createKeyboard from './helpers/createKeyboard'
 
-import Telegraf, { Markup } from 'telegraf'
-// import sql from 'sql-template-strings'
-
-import db from './db'
-
-if (!process.env.BOT_TOKEN) throw Error(`[telegram-jobs-bot] BOT_TOKEN is undefined`)
-
-function createKeyboard(...buttons) { // eslint-disable-line
-  return Markup.keyboard([
-    buttons,
-  ])
-  .oneTime()
-  .resize()
-  .extra()
-}
-
-const routes = [
+export default [
   ctx => (
     ctx.reply(
       `Выберите действие`,
@@ -84,6 +62,7 @@ const routes = [
   ctx => (
     ctx.reply(
       `5/5 Описание вакансии в свободной форме`,
+
       Markup.removeKeyboard(),
     )
   ),
@@ -106,37 +85,3 @@ const routes = [
     )
   ),
 ]
-
-function incrementState(userId, currentState) {
-  if (currentState === 7) {
-    // db.updateStep(userId, 0)
-    db[userId] = 0 // reset
-  } else {
-    // db.updateStep(userId)
-    db[userId]++
-  }
-}
-
-function stateMachineMiddleware(ctx, next) {
-  const { type: chatType } = ctx.update.message.chat
-  const userId = String(ctx.update.message.chat.id)
-
-  if (chatType === `private`) {
-    // const currentState = db.getStep(userId)
-    const currentState = db[userId] || 0
-    const handler = routes[currentState]
-
-    db[userId] = currentState
-
-    return handler(ctx, next, userId)
-      .then(() => incrementState(userId, currentState))
-      .then(next)
-  }
-
-  return next()
-}
-
-const app = new Telegraf(process.env.BOT_TOKEN)
-
-app.use(stateMachineMiddleware)
-app.startPolling()
