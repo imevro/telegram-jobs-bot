@@ -7,44 +7,64 @@
 // check
 // if ok, forward to channel, from channel forward to chat and then paste links
 
-import Telegraf from 'telegraf'
+import Telegraf from "telegraf";
 // import sql from 'sql-template-strings'
 
-import db from './db'
-import routes from './routes'
+import db from "./db";
+import routes from "./routes";
 
-if (!process.env.BOT_TOKEN) throw Error(`[telegram-jobs-bot] BOT_TOKEN is undefined`)
+if (!process.env.BOT_TOKEN) throw Error(`[telegram-jobs-bot] BOT_TOKEN is undefined`);
+
+const flowsByUserId = {};
+
+function checkForChatType(ctx, next) {
+  // eslint-disable-line
+  const { type: chatType } = ctx.update.message.chat;
+
+  if (chatType === `private`) return next();
+}
 
 function incrementState(userId, currentState) {
-  if (currentState === 7) {
-    // db.updateStep(userId, 0)
-    db[userId] = 0 // reset
+  if (currentState === 6) {
+    db[userId] = 0; // reset
   } else {
-    // db.updateStep(userId)
-    db[userId]++
+    db[userId]++;
   }
 }
 
-function stateMachineMiddleware(ctx, next) {
-  const { type: chatType } = ctx.update.message.chat
-  const userId = String(ctx.update.message.chat.id)
+function handleFlows(ctx, next) {
+  const userId = String(ctx.update.message.chat.id);
 
-  if (chatType === `private`) {
-    // const currentState = db.getStep(userId)
-    const currentState = db[userId] || 0
-    const handler = routes[currentState]
+  db[userId] = db[userId] || 0;
 
-    db[userId] = currentState
+  const currentState = db[userId];
+  const handler = routes.createJob[currentState];
 
-    return handler(ctx, next, userId)
-      .then(() => incrementState(userId, currentState))
-      .then(next)
-  }
-
-  return next()
+  return handler(ctx, next).then(() => incrementState(userId, currentState)).then(next);
 }
 
-const app = new Telegraf(process.env.BOT_TOKEN)
+function enterFlow(flow) {
+  flowsByUserId;
 
-app.use(stateMachineMiddleware)
-app.startPolling()
+  return next();
+}
+
+const app = new Telegraf(process.env.BOT_TOKEN);
+
+app.command(`start`, (ctx, next) =>
+  ctx
+    .reply(
+      `
+Выберите действие
+
+/create — создать новую вакансию
+/list — посмотреть список моих вакансий
+    `
+    )
+    .then(next));
+
+app.command(`create`, () => enterFlow(`createJob`));
+app.use(checkForChatType);
+app.use(handleFlows);
+
+app.startPolling();
